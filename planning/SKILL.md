@@ -1,0 +1,45 @@
+---
+name: planning
+description: Use this skill whenever constructing an implementation plan, scoping a feature, or defining a technical approach — before any code is written. Trigger on any request to plan, scope, outline, architect, or reason through how to build something, even without the word "plan" (e.g. "how should I approach this", "let's figure out how to build X", "walk me through this", "what's the best way to handle Y"). Also trigger when the user describes a feature and the next step is clearly to plan before implementing. This skill governs the planning conversation only — not the code that follows.
+---
+
+# Planning
+
+This skill governs how implementation plans are constructed during collaborative software development. Every rule here exists because of a specific, recurring failure mode. Follow them.
+
+The goal: a plan the user can actually read, understand, and act on. Not a plan that looks thorough while hiding assumptions the user will miss, or one that dumps so much detail it becomes impossible to process.
+
+## 1. Clarify before planning — never assume
+
+Do not plan around ambiguity. If any part of a request is unclear, ask about it first. A guess embedded in a detailed plan is dangerous precisely because it looks authoritative — the user skims past it, trusts it, and discovers the mistake during implementation when it's expensive to fix.
+
+If a clarifying answer is vague or incomplete, ask again. Do not settle for a partial answer to keep things moving. Keep asking until the ambiguity is genuinely resolved. The cost of another question is trivial compared to the cost of building on a wrong assumption.
+
+This applies in both directions: clarifying what the user means, and challenging what the user says. If something in the request looks like a poor practice, a security concern, a fragile architectural choice, or a sign the user may not fully understand the scope of what they're asking for — raise it. Push back, ask probing questions, or propose an alternative. The plan's job is to set the work up for success, not to faithfully transcribe instructions that will lead to problems. Complying silently with something that looks wrong is not helpful — it's negligent.
+
+## 2. Layer by abstraction — don't front-load detail
+
+A plan that presents every detail at once is unreadable, even when each detail is individually correct. The user cannot hold an entire implementation in their head before they've started working. Structure plans so they can be consumed incrementally:
+
+1. **Problem and approach** — the highest level of abstraction. What is the core issue, and what shape does the solution take?
+2. **Implementation strategy** — general methods and patterns, without naming specific files, functions, or line-level specifics.
+3. **Concerns and tradeoffs** — tricky areas, potential pitfalls, architectural tensions worth flagging. Still not granular.
+4. **Open items** — remaining questions, minor considerations, things to confirm before starting.
+
+The user should be able to stop at whatever level they need and ask to drill into a specific section. They should never be handed a wall of text where structural decisions are buried among filenames and function signatures.
+
+## 3. Manage scope — split when it's too big
+
+If, while scoping a request, it becomes clear the user is describing multiple distinct pieces of work tangled into one ask, say so explicitly. Do not try to force everything into a single monolithic plan. Propose splitting the work into phases — plan the phases first, then plan each phase individually. This keeps each plan focused and digestible, and prevents the user from drowning in a document that tries to cover too much ground at once.
+
+## 4. Consolidate as the plan evolves
+
+Planning is a discovery process. The user will change their mind, add requirements, refine earlier decisions, or realize something doesn't work as they talk through it. When this happens, do not append corrections to the end of the plan. Go back and consolidate: fold new information into the plan's existing structure, remove or revise anything that no longer holds, and clean up remnants of earlier thinking that the discovery process has superseded. The plan should always read as a coherent document reflecting the current state of understanding — never as a changelog of the conversation that produced it.
+
+## 5. Execution discipline
+
+State that this plan was built using the planning skill. This is not vanity — it signals that the process was actually followed and gives the user confidence the guidelines were applied.
+
+Describe the plan as something to implement step by step, with a pause for approval between each step before proceeding. This is the default because implementing everything in one shot consistently produces code that technically works but drifts from what was intended — there's no checkpoint where the user can catch the drift before it compounds. The exception: when the user explicitly requests one-shot implementation, which is reasonable for small, well-understood tasks. Respect that when they ask for it.
+
+When the plan is ready for implementation, direct that the implementation skill be used rather than falling back on default code-writing behavior.
