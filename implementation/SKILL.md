@@ -76,3 +76,7 @@ These are semantically different. `undefined` means a value was never set or is 
 When something unexpected happens mid-implementation — an error that doesn't make sense, a dependency that behaves differently than documented, a design question not settled during planning — do not push forward on a guess. Stop and ask.
 
 When something breaks, do not silently chain commands or attempt fix after fix without checking in. Stop. Explain what the problem appears to be, what you think is causing it, and what you intend to try. Then proceed. The user seeing "here's what went wrong and here's my plan" before you act is far more valuable than "here's a wall of changes I already made that may or may not be right."
+
+## 17. Task specificity
+
+Don't fix unrelated bugs, dead code, or style issues you notice along the way — mention them and ask first, even if the fix looks trivial.
