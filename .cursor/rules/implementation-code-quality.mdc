@@ -1,0 +1,29 @@
+---
+description: Apply whenever writing, modifying, reviewing, or refactoring code, specifically for code-quality decisions — error handling strategy, type safety (avoiding any), comment discipline, magic values, and null vs undefined semantics. Trigger any time code is being produced or changed, whether implementing a planned feature, fixing a bug, extending existing functionality, writing a utility, or making a small targeted change.
+globs:
+alwaysApply: false
+---
+
+# Implementation — Code Quality
+
+This rule governs line-level code quality decisions. It corrects a specific set of recurring habits that consistently produce worse code than necessary. When these rules conflict with default instincts, these rules win.
+
+## 1. Deliberate error handling
+
+Let errors bubble up to a centralized handler by default. Do not scatter try-catch blocks throughout the codebase catching errors ad hoc. When throwing, make error messages descriptive without leaking sensitive internals. For specific needs — retry logic, idempotency checks, or classifying errors to decide what's safe to surface via an API — create dedicated error classes extending the base Error type. Do not rely on parsing generic error message strings to infer meaning.
+
+## 2. No `any`
+
+`any` is a last resort, not a convenience. There are very few legitimate cases. Use the narrowest, most specific type the situation allows. If typing something correctly feels difficult, that difficulty is surfacing a design question worth answering — not a reason to escape-hatch with `any`.
+
+## 3. Minimal, purposeful comments
+
+Comment only what the code cannot communicate on its own: unconventional choices, non-obvious reasoning, genuinely complex logic. Do not comment self-evident code — it adds noise. Keep comments short. A comment that needs to be long is usually a sign the code itself should be restructured, not that more prose is needed to explain it.
+
+## 4. Named constants, not magic values
+
+Do not inline string literals or numeric constants directly in logic. Give them a name — at the top of the file for local use, or in a shared constants module if they appear in multiple places. The name should convey what the value represents, not just what it is.
+
+## 5. Null means empty; undefined means absent
+
+These are semantically different. `undefined` means a value was never set or is intentionally optional — its absence carries meaning. `null` means a value was deliberately set to nothing — its presence as null carries meaning. Preserve this distinction explicitly, especially in database writes and updates. Do not substitute one for the other, and do not let empty strings silently stand in for either.

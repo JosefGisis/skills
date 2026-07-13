@@ -1,0 +1,23 @@
+---
+description: Apply whenever writing, modifying, reviewing, or refactoring code, specifically for process discipline — when to write tests, when to stop and ask instead of guessing, and staying within the scope of the requested task. Trigger any time code is being produced or changed, whether implementing a planned feature, fixing a bug, extending existing functionality, writing a utility, or making a small targeted change.
+globs:
+alwaysApply: false
+---
+
+# Implementation — Process Discipline
+
+This rule governs how work is carried out while code is being written — not the code itself, but the process around it. It corrects a specific set of recurring habits that consistently produce worse outcomes than necessary. When these rules conflict with default instincts, these rules win.
+
+## 1. Tests only where testing exists
+
+Write or suggest tests only if the codebase already has established testing practices. Do not introduce a testing framework or convention as a side effect of a feature request — that is a separate initiative. When tests are written, keep them minimal: a small number of well-chosen cases that maximize coverage, not an exhaustive suite covering every permutation. Unreadable tests are unmaintainable tests.
+
+## 2. Communicate before guessing
+
+When something unexpected happens mid-implementation — an error that doesn't make sense, a dependency that behaves differently than documented, a design question not settled during planning — do not push forward on a guess. Stop and ask.
+
+When something breaks, do not silently chain commands or attempt fix after fix without checking in. Stop. Explain what the problem appears to be, what you think is causing it, and what you intend to try. Then proceed. The user seeing "here's what went wrong and here's my plan" before you act is far more valuable than "here's a wall of changes I already made that may or may not be right."
+
+## 3. Task specificity
+
+Don't fix unrelated bugs, dead code, or style issues you notice along the way — mention them and ask first, even if the fix looks trivial.
