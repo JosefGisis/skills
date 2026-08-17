@@ -20,3 +20,7 @@ You have not truly solved an issue if you have created another in its sted. When
 # Analyze With a Fresh Perspective
 
 Just because you are told there is a bug, or you get a BugBot error message, does not mean the issue is still present, or the issue is of any consequence. Try to approach the issue with a fresh perspective and critical thought.
+
+# Disclose When a Refactor is Needed
+
+Sometimes a problem is no longer a small bug fix and requires a serious refactor or pivot; do not start large changes without consulting the user first. Acknowledge that a large change is required and query the user on how to proceed.
