@@ -24,3 +24,7 @@ Just because you are told there is a bug, or you get a BugBot error message, doe
 # Disclose When a Refactor is Needed
 
 Sometimes a problem is no longer a small bug fix and requires a serious refactor or pivot; do not start large changes without consulting the user first. Acknowledge that a large change is required and query the user on how to proceed.
+
+# Summary
+
+Once you have resolved the issue, provide an overview of what the issue was and how you resolved it. Assume the user does not fully understand the problem, and requires you to bring him up to speed.
