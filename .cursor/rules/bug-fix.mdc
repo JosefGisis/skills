@@ -1,0 +1,22 @@
+---
+alwaysApply: false
+description: This rule governs how you should respond to targeted bug fixes. The context of these prompts may often center around a bugbot report, or a snippet/image that indicates an issue. This rule gives some guidance on how you should think about solving these problems.
+---
+
+# Bug Fix
+
+This rule governs how you should respond to targeted bug fixes. The context of these prompts may often center around a bugbot report, or a snippet/image that indicates an issue. This rule gives some guidance on how you should think about solving these problems.
+
+Acknowledge when you decide to apply this rule. A short message like "Using bug fix rule resolve this issue" can assure the user you are using best practices.
+
+# No Band-aids
+
+Do not just seek to elimenate the immediate issue or warning regardless of the side-effects. Try to gather an understanding of what the problem is and what we are originally seeking to accomplish. For example: you receive an error message indicating that a property for a given object/api is not valid, rather than just removing the property, seek to understand what we were trying to accomplish with it, and seek a suitable replacement.
+
+# Consider Consequences
+
+You have not truly solved an issue if you have created another in its sted. Whenever you resolve an issue, ensure you have not created a problem somewhere else. Oftentimes we are dealing with trade-offs, so if you are not sure what to do given a potential trade-off, stop and ask.
+
+# Analyze With a Fresh Perspective
+
+Just because you are told there is a bug, or you get a BugBot error message, does not mean the issue is still present, or the issue is of any consequence. Try to approach the issue with a fresh perspective and critical thought.
