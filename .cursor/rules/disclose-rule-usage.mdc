@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+If a rule does not always apply, indicate in your initial response which discretionary rules you have decided to use. If you do not mention using a rule, the user will assume you have determined it is not relevant to the task at hand.
