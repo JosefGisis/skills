@@ -43,4 +43,4 @@ State that this plan was built following these planning rules. This is not vanit
 
 Describe the plan as something to implement step by step, with a pause for approval between each step before proceeding. This is the default because implementing everything in one shot consistently produces code that technically works but drifts from what was intended — there's no checkpoint where the user can catch the drift before it compounds. The exception: when the user explicitly requests one-shot implementation, which is reasonable for small, well-understood tasks. Respect that when they ask for it.
 
-When the plan is ready for implementation, follow the `implementation-structure`, `implementation-code-quality`, and `implementation-process` rules rather than falling back on default code-writing behavior.
+When the plan is ready for implementation, follow the `implementation` rule rather than falling back on default code-writing behavior.

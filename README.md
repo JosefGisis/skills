@@ -8,13 +8,11 @@ A small collection of [Claude Code Agent Skills](https://docs.claude.com/en/docs
 
 Each skill is a single `SKILL.md` file with YAML frontmatter (`name`, `description`) describing when the skill should trigger, followed by the rules themselves.
 
-The same content is also split into [Cursor Project Rules](.cursor/rules/) (`.mdc` files), grouped thematically so Cursor's agent can pull in just the relevant cluster:
+The same content is also available as [Cursor Project Rules](.cursor/rules/) (`.mdc` files):
 
-- **[deliberate.mdc](.cursor/rules/deliberate.mdc)** — mirrors the deliberate skill directly.
-- **[planning.mdc](.cursor/rules/planning.mdc)** — mirrors the planning skill directly (its 5 rules are already tightly related).
-- **[implementation-structure.mdc](.cursor/rules/implementation-structure.mdc)** — architecture and structure: minimalism, conformity, DRY, reuse, dependency direction, deprecation, extraction, template method, inheritance.
-- **[implementation-code-quality.mdc](.cursor/rules/implementation-code-quality.mdc)** — line-level quality: error handling, no `any`, comments, magic values, null vs. undefined.
-- **[implementation-process.mdc](.cursor/rules/implementation-process.mdc)** — process discipline: tests, communicating before guessing, task specificity.
+- **[deliberate.mdc](.cursor/rules/deliberate.mdc)** — mirrors the deliberate skill.
+- **[planning.mdc](.cursor/rules/planning.mdc)** — mirrors the planning skill.
+- **[implementation.mdc](.cursor/rules/implementation.mdc)** — mirrors the implementation skill (structure, code quality, and process in one rule).
 
 ## Adding these skills to your local agent context
 
@@ -56,7 +54,7 @@ mkdir -p /path/to/your/project/.cursor/rules
 cp .cursor/rules/*.mdc /path/to/your/project/.cursor/rules/
 ```
 
-Or copy only the clusters you want (e.g. just `planning.mdc`, or only the implementation files). Restart Cursor (or start a new chat) and the rules will be available; you can also check **Cursor Settings → Rules** to confirm they're indexed, or reference one explicitly with `@ruleName`.
+Or copy only the rules you want (e.g. just `planning.mdc` and `implementation.mdc`). Restart Cursor (or start a new chat) and the rules will be available; you can also check **Cursor Settings → Rules** to confirm they're indexed, or reference one explicitly with `@ruleName`.
 
 If you'd rather have a rule always applied regardless of context (no agent judgment call), open the file in Cursor's rule editor and switch its type to **Always**, or set `alwaysApply: true` in the frontmatter directly.
 
