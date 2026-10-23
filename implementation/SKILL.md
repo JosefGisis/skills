@@ -1,11 +1,27 @@
 ---
 name: implementation
-description: Use this skill whenever writing, modifying, reviewing, or refactoring code — from high-level architectural choices down to line-level style. Trigger any time code is being produced or changed, whether implementing a planned feature, fixing a bug, extending existing functionality, writing a utility, or making a small targeted change. This skill corrects specific recurring bad habits — verbosity, premature abstraction, unsafe types, dependency tangles, and more — and its rules take precedence over default coding instincts whenever they conflict. This is not a general design-pattern encyclopedia; it is a targeted set of corrections based on observed mistakes.
+description: >-
+  Corrects recurring implementation habits — verbosity, premature abstraction,
+  unsafe types, dependency tangles, and scope creep. Use when writing, modifying,
+  reviewing, or refactoring code (features, bugs, utilities, or small targeted
+  changes). Not a design-pattern encyclopedia; a targeted correction set that
+  takes precedence over default coding instincts when they conflict.
 ---
 
 # Implementation
 
-This skill governs code as it's actually written — from architecture down to style. It does not dictate which design pattern or architectural approach to use in every situation; that's context-dependent. What it does is correct a specific set of recurring habits that consistently produce worse code than necessary. When these rules conflict with default instincts, these rules win.
+This skill governs code as it's actually written — from architecture down to style. It does not dictate which design pattern to use in every situation; that's context-dependent. It corrects recurring habits that consistently produce worse code than necessary. When these rules conflict with default instincts, these rules win.
+
+## Conflict priority
+
+When two rules in this skill pull in different directions, apply this order (higher wins):
+
+1. **Task specificity** and **communicate before guessing** (process)
+2. **Architectural conformity** (match the codebase you are in)
+3. **Minimalism**
+4. Everything else
+
+Language-specific rules (§11, §15) apply only in languages where those constructs exist.
 
 ## 1. Minimalism
 
@@ -17,11 +33,11 @@ Scale architecture to the feature — heavy structure for a simple task is waste
 
 ## 3. DRY over colocation
 
-Do not repeat code. This is near-absolute. Colocating related code for readability matters too, but when DRY and colocation conflict, DRY wins. Code stays local only when it is genuinely specific to one feature and used nowhere else. The moment something is reused, it is by definition a separate concern — extract it to a shared utility, module, or library, even if that means it no longer sits beside its call site.
+Do not repeat code when the same logic is (or is about to be) used in more than one place. Colocating related code for readability matters too, but when DRY and colocation conflict, DRY wins. Code stays local only when it is genuinely specific to one feature and used nowhere else. Once something is shared, extract it to a shared utility, module, or library — even if that means it no longer sits beside its call site.
 
 ## 4. Reuse before writing
 
-Before writing any helper, utility, or shared function, check whether equivalent functionality already exists — in an external library the project uses, or elsewhere in the codebase. If it exists and importing it makes architectural sense, use it. If it exists but importing from that location would be architecturally wrong (different feature boundary, wrong layer), extract a local copy. If consolidating the duplication is easy, do it. If not, extract locally and leave a brief note about the existing duplicate — cleaning up code outside the current scope is not this task's job.
+Before writing any helper, utility, or shared function, check whether equivalent functionality already exists — in an external library the project uses, or elsewhere in the codebase. If it exists and importing it makes architectural sense, use it. If it exists but importing from that location would be architecturally wrong (different feature boundary, wrong layer), prefer a thin local wrapper or a carefully scoped local copy over a cross-boundary import. If consolidating the duplication is easy and in-scope, do it. If not, keep the local version and leave a brief note about the existing duplicate — cleaning up code outside the current scope is not this task's job.
 
 ## 5. Directional dependencies
 
@@ -39,21 +55,21 @@ Do not extract a small helper function used exactly once. Inline it. The theoret
 
 When extracting, name functions for what they actually do. If two functions end up with nearly identical names differentiated by a subtle suffix to avoid a collision, stop. Either the abstraction is wrong, one should be inlined, or the names need to describe genuinely different behaviors — not just avoid a namespace clash.
 
-## 8. Template Method for sequential processes
+## 8. Explicit steps for sequential processes
 
-When a process has clear ordered steps, prefer a top-level orchestrator that calls each step in sequence over a single monolithic function or a cluster of vaguely-related helpers. Making the steps explicit — `validateInput`, `transformData`, `persistResult` — makes the flow readable at a glance, debuggable when a step fails, and extensible when a new step is needed. Not every function benefits from this, but it is underused where it would help.
+When a process has clear ordered steps, prefer a top-level orchestrator that calls each step in sequence over a single monolithic function or a cluster of vaguely-related helpers — *if* that clarity is worth the extra surface area (see Minimalism). Making the steps explicit — `validateInput`, `transformData`, `persistResult` — makes the flow readable at a glance, debuggable when a step fails, and extensible when a new step is needed. Do not force this shape onto simple functions.
 
-## 9. Inheritance for shared structure
+## 9. Shared structure only when variants share a skeleton
 
-When multiple variants share the same skeleton of behavior, use a base or abstract class for the shared logic and extend it with subclasses that override only what differs. This eliminates duplicated logic and makes the variant relationships explicit in the code structure itself. Apply judgment — this is not always the right tool, but it is currently underreached for in situations where it would clarify things.
+When multiple variants already share the same skeleton of behavior, a base/abstract type (or equivalent shared core) that overrides only what differs can eliminate duplication and make relationships explicit. Use this when the shared skeleton is real and stable — not as a default for every similar-looking pair of functions. Prefer simpler options (shared helpers, composition) when inheritance would be speculative.
 
 ## 10. Deliberate error handling
 
-Let errors bubble up to a centralized handler by default. Do not scatter try-catch blocks throughout the codebase catching errors ad hoc. When throwing, make error messages descriptive without leaking sensitive internals. For specific needs — retry logic, idempotency checks, or classifying errors to decide what's safe to surface via an API — create dedicated error classes extending the base Error type. Do not rely on parsing generic error message strings to infer meaning.
+If the project has a centralized error-handling path, let errors bubble up to it by default. Do not scatter try-catch blocks catching errors ad hoc. When throwing, make error messages descriptive without leaking sensitive internals. For specific needs — retry logic, idempotency checks, or classifying errors to decide what's safe to surface via an API — create dedicated error types rather than parsing generic error message strings. If the codebase has no centralized handler, follow its existing error style; do not invent a new global strategy mid-task.
 
-## 11. No `any`
+## 11. No `any` (TypeScript / gradual-typing languages)
 
-`any` is a last resort, not a convenience. There are very few legitimate cases. Use the narrowest, most specific type the situation allows. If typing something correctly feels difficult, that difficulty is surfacing a design question worth answering — not a reason to escape-hatch with `any`.
+In TypeScript and similar gradually typed languages, `any` is a last resort, not a convenience. There are very few legitimate cases. Use the narrowest, most specific type the situation allows. If typing something correctly feels difficult, that difficulty is surfacing a design question worth answering — not a reason to escape-hatch with `any`. Skip this rule in languages without an `any`-like escape hatch. If the surrounding codebase already relies on `any` heavily, match local convention for consistency unless the task is specifically to tighten types.
 
 ## 12. Minimal, purposeful comments
 
@@ -65,11 +81,13 @@ Write or suggest tests only if the codebase already has established testing prac
 
 ## 14. Named constants, not magic values
 
-Do not inline string literals or numeric constants directly in logic. Give them a name — at the top of the file for local use, or in a shared constants module if they appear in multiple places. The name should convey what the value represents, not just what it is.
+Do not inline unexplained string or numeric literals in logic when a name would clarify meaning. Give them a name — at the top of the file for local use, or in a shared constants module if they appear in multiple places. The name should convey what the value represents, not just what it is.
 
-## 15. Null means empty; undefined means absent
+Exceptions: self-evident values (`0`, `1`, `-1`, empty string in a clear context), idiomatic literals (HTTP methods already readable at the call site), and test fixtures where the literal *is* the point. Prefer Minimalism over ritual naming.
 
-These are semantically different. `undefined` means a value was never set or is intentionally optional — its absence carries meaning. `null` means a value was deliberately set to nothing — its presence as null carries meaning. Preserve this distinction explicitly, especially in database writes and updates. Do not substitute one for the other, and do not let empty strings silently stand in for either.
+## 15. Null means empty; undefined means absent (JavaScript / TypeScript)
+
+In JS/TS, these are semantically different. `undefined` means a value was never set or is intentionally optional — its absence carries meaning. `null` means a value was deliberately set to nothing — its presence as null carries meaning. Preserve this distinction explicitly, especially in database writes and updates. Do not substitute one for the other, and do not let empty strings silently stand in for either. In other languages, follow that language's idiomatic empty/absent conventions instead.
 
 ## 16. Communicate before guessing
 
