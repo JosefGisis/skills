@@ -1,6 +1,14 @@
 ---
 name: planning
-description: Use this skill whenever constructing an implementation plan, scoping a feature, or defining a technical approach — before any code is written. Trigger on any request to plan, scope, outline, architect, or reason through how to build something, even without the word "plan" (e.g. "how should I approach this", "let's figure out how to build X", "walk me through this", "what's the best way to handle Y"). Also trigger when the user describes a feature and the next step is clearly to plan before implementing. This skill governs the planning conversation only — not the code that follows.
+description: >-
+  Constructs readable, assumption-light implementation plans before code is
+  written. Use when scoping a feature, defining a technical approach, or when
+  the user asks to plan, outline, architect, or reason through how to build
+  something — including paraphrases without the word "plan" (e.g. "how should I
+  approach this", "let's figure out how to build X", "walk me through this",
+  "what's the best way to handle Y"), or when they describe a feature and the
+  next step is clearly to plan before implementing. Governs the planning
+  conversation only — not the code that follows.
 ---
 
 # Planning
@@ -9,11 +17,21 @@ This skill governs how implementation plans are constructed during collaborative
 
 The goal: a plan the user can actually read, understand, and act on. Not a plan that looks thorough while hiding assumptions the user will miss, or one that dumps so much detail it becomes impossible to process.
 
+## Conflict priority
+
+When rules pull in different directions:
+
+1. **Clarify / challenge decision-critical ambiguity** (§1)
+2. **Manage scope** — split oversized asks (§3)
+3. **Layer by abstraction** (§2)
+4. **Consolidate** as understanding changes (§4)
+5. **Execution discipline** (§5)
+
 ## 1. Clarify before planning — never assume
 
-Do not plan around ambiguity. If any part of a request is unclear, ask about it first. A guess embedded in a detailed plan is dangerous precisely because it looks authoritative — the user skims past it, trusts it, and discovers the mistake during implementation when it's expensive to fix.
+Do not plan around decision-critical ambiguity. If any part of a request would change the approach, architecture, or success criteria, ask about it first. A guess embedded in a detailed plan is dangerous precisely because it looks authoritative — the user skims past it, trusts it, and discovers the mistake during implementation when it's expensive to fix.
 
-If a clarifying answer is vague or incomplete, ask again. Do not settle for a partial answer to keep things moving. Keep asking until the ambiguity is genuinely resolved. The cost of another question is trivial compared to the cost of building on a wrong assumption.
+If a clarifying answer is vague or incomplete on a blocking point, ask again. Do not settle for a partial answer just to keep moving. For non-blocking unknowns, park them under **Open items** and proceed — do not interrogate forever on details that will not change the plan's shape.
 
 This applies in both directions: clarifying what the user means, and challenging what the user says. If something in the request looks like a poor practice, a security concern, a fragile architectural choice, or a sign the user may not fully understand the scope of what they're asking for — raise it. Push back, ask probing questions, or propose an alternative. The plan's job is to set the work up for success, not to faithfully transcribe instructions that will lead to problems. Complying silently with something that looks wrong is not helpful — it's negligent.
 
@@ -38,7 +56,7 @@ Planning is a discovery process. The user will change their mind, add requiremen
 
 ## 5. Execution discipline
 
-State that this plan was built using the planning skill. This is not vanity — it signals that the process was actually followed and gives the user confidence the guidelines were applied.
+If the environment expects discretionary-rule disclosure, note briefly that the planning skill was applied — once, not as a badge or preamble on every section.
 
 Describe the plan as something to implement step by step, with a pause for approval between each step before proceeding. This is the default because implementing everything in one shot consistently produces code that technically works but drifts from what was intended — there's no checkpoint where the user can catch the drift before it compounds. The exception: when the user explicitly requests one-shot implementation, which is reasonable for small, well-understood tasks. Respect that when they ask for it.
 
