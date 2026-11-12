@@ -17,6 +17,10 @@ The same content is also available as [Cursor Project Rules](.cursor/rules/) (`.
 
 ## Adding these skills to your local agent context
 
+Run every command below from this repository's root (the directory that contains `deliberate/`, `planning/`, `implementation/`, and `prompt-auditor/`). Paths like `deliberate` are relative to that root.
+
+**Updating an existing install:** re-run the same `cp` command(s). They overwrite the destination copies with what's in this repo — no uninstall step.
+
 ### Claude Code
 
 Claude Code discovers skills from two locations:
@@ -24,7 +28,7 @@ Claude Code discovers skills from two locations:
 - **Personal (all projects):** `~/.claude/skills/`
 - **Project-specific (this repo only):** `<project>/.claude/skills/`
 
-To install both skills globally, copy each skill folder into your personal skills directory:
+To install (or refresh) skills globally, copy each skill folder into your personal skills directory:
 
 ```bash
 mkdir -p ~/.claude/skills
@@ -50,7 +54,7 @@ Restart Claude Code (or start a new session) and the skills will be available. C
 
 Cursor discovers Project Rules from `.cursor/rules/` in the repository root. Each `.mdc` file here uses `description`-based activation ("Agent Requested") — Cursor's agent decides whether to pull a rule into context based on its `description` frontmatter, the same trigger conditions used by the Claude Code skills above.
 
-Copy the whole directory into your project root:
+From this repo root, copy the rules into your project (same commands refresh an existing copy):
 
 ```bash
 mkdir -p /path/to/your/project/.cursor/rules
