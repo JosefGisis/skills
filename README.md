@@ -5,6 +5,7 @@ A small collection of [Claude Code Agent Skills](https://docs.claude.com/en/docs
 - **[deliberate](deliberate/SKILL.md)** — governs open-ended back-and-forth where the direction is still undecided: resist anchoring to the user's first framing, ask the question that would actually change the answer, name gaps in understanding, make scale concerns concrete, and converge on an answer instead of hedging indefinitely.
 - **[planning](implementation/../planning/SKILL.md)** — governs the planning conversation before any code is written: clarify ambiguity up front, layer the plan by abstraction instead of front-loading detail, split oversized asks into phases, and consolidate the plan as understanding evolves.
 - **[implementation](implementation/SKILL.md)** — governs code as it's written, from architecture to line-level style: minimalism, DRY over colocation, reuse before writing, directional dependencies, deliberate error handling, and other corrections for recurring bad habits.
+- **[prompt-auditor](prompt-auditor/SKILL.md)** — audits a draft prompt, closes material gaps with quick questions, and returns a sectioned improved prompt runnable with a single yes. Explicit invoke only (`/prompt-auditor`).
 
 Each skill is a single `SKILL.md` file with YAML frontmatter (`name`, `description`) describing when the skill should trigger, followed by the rules themselves.
 
@@ -30,6 +31,7 @@ mkdir -p ~/.claude/skills
 cp -r deliberate ~/.claude/skills/deliberate
 cp -r planning ~/.claude/skills/planning
 cp -r implementation ~/.claude/skills/implementation
+cp -r prompt-auditor ~/.claude/skills/prompt-auditor
 ```
 
 Or, to scope them to a single project instead, copy them into that project's `.claude/skills/` directory:
@@ -39,9 +41,10 @@ mkdir -p /path/to/your/project/.claude/skills
 cp -r deliberate /path/to/your/project/.claude/skills/deliberate
 cp -r planning /path/to/your/project/.claude/skills/planning
 cp -r implementation /path/to/your/project/.claude/skills/implementation
+cp -r prompt-auditor /path/to/your/project/.claude/skills/prompt-auditor
 ```
 
-Restart Claude Code (or start a new session) and the skills will be available. Claude invokes them automatically based on each skill's `description` trigger conditions — you can also invoke one explicitly with `/deliberate`, `/planning`, or `/implementation`.
+Restart Claude Code (or start a new session) and the skills will be available. Claude invokes them automatically based on each skill's `description` trigger conditions — you can also invoke one explicitly with `/deliberate`, `/planning`, `/implementation`, or `/prompt-auditor`.
 
 ### Cursor
 
