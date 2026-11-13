@@ -34,6 +34,14 @@ Evaluate the draft against these eight elements. **Never show this checklist to 
 
 Also watch for: minor instructions longer/louder than the main goal, contradictions, vague wording, buried priorities.
 
+## Voice rambling
+
+Spoken or stream-of-consciousness drafts often arrive unordered. Primary and tertiary concerns get mixed.
+
+1. **Organize** — pull out a single primary objective; demote tertiary points so they do not compete with it.
+2. **Flag stray / expansion** — if the ramble drifted into other topics or ballooned the ask into a very large area, say so plainly and confirm scope. Do not silently accept the expansion.
+3. Still never invent missing information; state inferences when you reorganize.
+
 ## Ambiguity
 
 1. Resolve from available context first (files, attachments, conversation).
@@ -76,8 +84,9 @@ Also watch for: minor instructions longer/louder than the main goal, contradicti
 …
 ```
 
-2. **Notes** — at most two or three lines: what changed, what you inferred, any gap deliberately left open.
-3. **End with exactly:** `Does this look right, and should I run it?`
+2. **Reiterate what matters** — if the user stated something important that could get lost among constraints or detail, restate it in the final improved prompt (especially **Goal** / **Success**) so it stays loud. Do this in the prompt itself, not only in the notes.
+3. **Notes** — at most two or three lines: what changed, what you inferred, any gap deliberately left open.
+4. **End with exactly:** `Does this look right, and should I run it?`
 
 A plain **yes** runs the improved prompt immediately. Do not run until then.
 
