@@ -19,51 +19,51 @@ Code that merely works isn’t enough. It must also be readable and easy to exte
 
 For example, a function called processData that validates, transforms, and saves is a pile, not a component. Split it into validateOrder, applyDiscounts, and saveOrder, each named for what it does in the domain.
 
-## 2. Architectural conformity
+## 3. Architectural conformity
 
 Scale architecture to the feature — heavy structure for a simple task is waste. When working in an existing codebase, match its conventions and patterns, even imperfect ones. Implementing a feature does not implicitly authorize restructuring the surrounding architecture. That is a separate, explicit request. Work within the existing constraints. If the codebase has a pattern for routing, data access, or state management, use that pattern — do not introduce a different one because it's theoretically cleaner.
 
-## 3. DRY over colocation
+## 4. DRY over colocation
 
 Do not repeat code when the same logic is (or is about to be) used in more than one place. Colocating related code for readability matters too, but when DRY and colocation conflict, DRY wins. Code stays local only when it is genuinely specific to one feature and used nowhere else. Once something is shared, extract it to a shared utility, module, or library — even if that means it no longer sits beside its call site.
 
-## 4. Reuse before writing
+## 5. Reuse before writing
 
 Before writing any helper, utility, or shared function, check whether equivalent functionality already exists — in an external library the project uses, or elsewhere in the codebase. If it exists and importing it makes architectural sense, use it. If it exists but importing from that location would be architecturally wrong (different feature boundary, wrong layer), prefer a thin local wrapper or a carefully scoped local copy over a cross-boundary import. If consolidating the duplication is easy and in-scope, do it. If not, keep the local version and leave a brief note about the existing duplicate — cleaning up code outside the current scope is not this task's job.
 
-## 5. Directional dependencies
+## 6. Directional dependencies
 
 Never create circular dependencies. Keep the dependency graph flowing in one direction: leaves and utilities are imported by services, services by handlers, handlers by routes — never the reverse. Indirect circularity (A → B → C → A) is a structural smell even when it doesn't cause a runtime failure. Avoid it.
 
 Sibling modules at the same directory level may import from each other when the relationship is conceptually hierarchical and one-directional — an orchestration service importing from a utility service that happens to sit at the same folder depth. A flat directory structure is fine as long as dependency _direction_ stays clear and consistent.
 
-## 6. No premature deprecation or wrapping
+## 7. No premature deprecation or wrapping
 
 Do not add `@deprecated` markers or backwards-compatibility wrappers unless explicitly asked. This is especially wrong mid-task: if the direction of a feature shifts during implementation, do not wrap or deprecate the earlier version. The feature is being actively built. Write it for its current shape and move on.
 
-## 7. Extraction by judgment, not reflex
+## 8. Extraction by judgment, not reflex
 
 Do not extract a small helper function used exactly once. Inline it. The theoretical benefit of extraction — reuse, isolation — does not apply to something called once, and a tiny extracted function just adds a place the reader has to jump to for no payoff. However, if a single-use block is large or genuinely complex, extract it — a long inline blob hurts readability more than a well-named function.
 
 When extracting, name functions for what they actually do. If two functions end up with nearly identical names differentiated by a subtle suffix to avoid a collision, stop. Either the abstraction is wrong, one should be inlined, or the names need to describe genuinely different behaviors — not just avoid a namespace clash.
 
-## 8. Explicit steps for sequential processes
+## 9. Explicit steps for sequential processes
 
 When a process has clear ordered steps, prefer a top-level orchestrator that calls each step in sequence over a single monolithic function or a cluster of vaguely-related helpers — _if_ that clarity is worth the extra surface area (see Minimalism). Making the steps explicit — `validateInput`, `transformData`, `persistResult` — makes the flow readable at a glance, debuggable when a step fails, and extensible when a new step is needed. Do not force this shape onto simple functions.
 
-## 9. Shared structure only when variants share a skeleton
+## 10. Shared structure only when variants share a skeleton
 
 When multiple variants already share the same skeleton of behavior, a base/abstract type (or equivalent shared core) that overrides only what differs can eliminate duplication and make relationships explicit. Use this when the shared skeleton is real and stable — not as a default for every similar-looking pair of functions. Prefer simpler options (shared helpers, composition) when inheritance would be speculative.
 
-## 10. Deliberate error handling
+## 11. Deliberate error handling
 
 If the project has a centralized error-handling path, let errors bubble up to it by default. Do not scatter try-catch blocks catching errors ad hoc. When throwing, make error messages descriptive without leaking sensitive internals. For specific needs — retry logic, idempotency checks, or classifying errors to decide what's safe to surface via an API — create dedicated error types rather than parsing generic error message strings. If the codebase has no centralized handler, follow its existing error style; do not invent a new global strategy mid-task.
 
-## 11. Minimal, purposeful comments
+## 12. Minimal, purposeful comments
 
 Comment only what the code cannot communicate on its own: unconventional choices, non-obvious reasoning, genuinely complex logic. Do not comment self-evident code — it adds noise. Keep comments short. A comment that needs to be long is usually a sign the code itself should be restructured, not that more prose is needed to explain it.
 
-## 12. Named constants, not magic values
+## 13. Named constants, not magic values
 
 Do not inline unexplained string or numeric literals in logic when a name would clarify meaning. Give them a name — at the top of the file for local use, or in a shared constants module if they appear in multiple places. The name should convey what the value represents, not just what it is.
 
