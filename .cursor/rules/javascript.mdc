@@ -1,0 +1,16 @@
+---
+description: >-
+  JavaScript and TypeScript typing rules — no `any`, and null vs undefined.
+  Always applies.
+alwaysApply: false
+---
+
+# JavaScript
+
+## 1. No `any` (TypeScript / gradual-typing languages)
+
+In TypeScript and similar gradually typed languages, `any` is a last resort, not a convenience. There are very few legitimate cases. Use the narrowest, most specific type the situation allows. If typing something correctly feels difficult, that difficulty is surfacing a design question worth answering — not a reason to escape-hatch with `any`. Skip this rule in languages without an `any`-like escape hatch. If the surrounding codebase already relies on `any` heavily, match local convention for consistency unless the task is specifically to tighten types.
+
+## 2. Null means empty; undefined means absent (JavaScript / TypeScript)
+
+In JS/TS, these are semantically different. `undefined` means a value was never set or is intentionally optional — its absence carries meaning. `null` means a value was deliberately set to nothing — its presence as null carries meaning. Preserve this distinction explicitly, especially in database writes and updates. Do not substitute one for the other, and do not let empty strings silently stand in for either. In other languages, follow that language's idiomatic empty/absent conventions instead.
