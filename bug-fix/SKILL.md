@@ -1,18 +1,16 @@
 ---
 name: bug-fix
 description: >-
-  Guides targeted bug fixes without band-aids, collateral damage, or unsolicited
-  refactors. Use when fixing a reported bug, addressing a Bugbot or CI finding,
-  or working from a snippet/image that indicates an issue. Distinct from
-  implementation (general code writing) and review (report-only audit) — this
-  skill governs how a focused fix is diagnosed and resolved.
+  Rules for diagnosing and resolving a single targeted bug without band-aids,
+  collateral damage, or unsolicited refactors. Use when fixing one reported
+  issue (Bugbot, CI, snippet, or image).
 ---
 
 # Bug Fix
 
-This skill governs how to respond to targeted bug fixes. The context often centers on a Bugbot report, a CI/lint finding, or a snippet/image that indicates an issue.
+Rules for one targeted bug — a Bugbot report, a CI/lint finding, or a snippet/image. Apply them to the issue you were given.
 
-When this skill applies, disclose briefly once (e.g. that the bug-fix skill is in use). Then write the fix using the implementation skill.
+Disclose briefly once when this skill applies.
 
 ## 1. No band-aids
 
