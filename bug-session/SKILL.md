@@ -1,17 +1,19 @@
 ---
 name: bug-session
 description: >-
-  Full bug session: establish review context, ask which Bugbot-class agents to
-  run in parallel (cost-aware), collect findings, then hand the list to
-  bug-triage. Use when explicitly asked for a bug session, multi-agent bug
-  review, or parallel Bugbot-style discovery before triage and fix. Discovery
-  only — does not triage or fix itself. Requires explicit invocation.
+  Full bug session: establishes review context, runs parallel Bugbot-class
+  reviewers (the user's choice, or three Bugbot reviewers when they have no
+  preference), collects findings, then hands the list to bug-triage to finish.
+  Use when explicitly asked for a bug session,
+  multi-agent bug review, or parallel Bugbot-style discovery before triage and
+  fix. Discovery only — does not triage or fix itself. Requires explicit
+  invocation.
 disable-model-invocation: true
 ---
 
 # Bug Session
 
-Explicit entry point for **discovery**. Surfaces issues via parallel Bugbot-class reviewers, then hands the finding list to `bug-triage`.
+Explicit entry point for **discovery**. Surfaces issues via parallel Bugbot-class reviewers, then hands the finding list to `bug-triage`, which runs to completion.
 
 This skill does **not** rank, propose, or implement fixes — `bug-triage` does that. Multi-agent review is one way to build a finding list; other lists go straight to `bug-triage`.
 
@@ -19,34 +21,29 @@ Disclose briefly once that bug-session is in use. After handoff, the same agent 
 
 ## Workflow
 
+Run these steps in order. Do not stop to ask which surfaced bugs to fix — `bug-triage` decides that.
+
 ### 1. Establish review context
 
-Determine what will be reviewed: PR, branch, or diff scope (e.g. branch changes vs uncommitted). Resolve repo path and any PR URL/number. If context is ambiguous, ask once.
+Determine what will be reviewed: PR, branch, or diff scope. Default to branch changes. Resolve repo path and any PR URL/number. If context is ambiguous, ask once.
 
-### 2. Ask which agents to run
+### 2. Choose reviewers
 
-Ask the user:
+If the user already named which reviewers to use or how many, use that.
 
-- Which Bugbot-class reviewer(s) to use (default: Bugbot via the `review-bugbot` skill / `bugbot` subagent)
-- How many to run **in parallel**
+If they did not, ask once whether they have a preference, and state the suggestion: **3 identical Bugbot reviewers** on the same context. If they have no preference, run that suggestion. A missing preference is not a reason to stop the session.
 
-Note cost: more parallel reviewers raise confidence via agreement but multiply cost. **Default recommendation: 3 identical Bugbot reviewers** on the same context (enough for consensus, bounded cost).
+Use the `review-bugbot` skill's launch shape for Bugbot subagents. Launch the chosen reviewers in parallel on the **same** context.
 
-Do not launch until they answer (or accept the default).
+Do not add reviewer types the user did not ask for. The suggestion stays Bugbot.
 
-### 3. Launch parallel reviewers
-
-Detectors: **Bugbot via the `review-bugbot` skill only**. Do not also fan out `review`, security-review, or CI investigators.
-
-Launch the agreed number of reviewers in parallel on the **same** determined context. Prefer the `review-bugbot` skill’s launch shape when using Bugbot subagents.
-
-### 4. Collect findings
+### 3. Collect findings
 
 Gather each reviewer’s report into one raw finding set (preserve which reviewer reported what). Do not fix anything here.
 
-### 5. Hand off to bug-triage
+### 4. Hand off to bug-triage
 
-Invoke the `bug-triage` skill with the collected finding list (and PR/context refs). Triage owns: dedupe/rank/confidence, selection, proposal agents (using `bug-fix` under triage’s constraints), orchestrator approval, worktree implements, and PR resolve/reply.
+Invoke the `bug-triage` skill with the collected finding list (and PR/context refs). Triage owns: dedupe/rank/confidence, decisions, proposal agents (using `bug-fix` under triage’s constraints), worktree implements, and PR resolve/reply.
 
 ## Composability
 

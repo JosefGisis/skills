@@ -1,70 +1,69 @@
 # skills
 
-A small collection of [Claude Code Agent Skills](https://docs.claude.com/en/docs/claude-code/skills) that shape how an AI coding agent plans and implements work.
+A collection of Agent Skills and Cursor Rules that shape how an AI coding agent plans, deliberates, writes, reviews, and fixes code.
 
-- **[deliberate](deliberate/SKILL.md)** — governs open-ended back-and-forth where the direction is still undecided: resist anchoring to the user's first framing, ask the question that would actually change the answer, name gaps in understanding, make scale concerns concrete, and converge on an answer instead of hedging indefinitely.
-- **[planning](implementation/../planning/SKILL.md)** — governs the planning conversation before any code is written: clarify ambiguity up front, layer the plan by abstraction instead of front-loading detail, split oversized asks into phases, and consolidate the plan as understanding evolves.
-- **[implementation](implementation/SKILL.md)** — governs code as it's written, from architecture to line-level style: minimalism, DRY over colocation, reuse before writing, directional dependencies, deliberate error handling, and other corrections for recurring bad habits.
+## Skills
+
+Each skill is a folder containing a `SKILL.md` with YAML frontmatter (`name`, `description`) describing its purpose and trigger conditions:
+
+- **[deliberate](deliberate/SKILL.md)** — governs open-ended back-and-forth where the direction is still undecided: resist anchoring, ask load-bearing questions, name gaps, make scale concerns concrete, and converge deliberately.
+- **[planning](planning/SKILL.md)** — governs the planning conversation before code is written: clarify ambiguity up front, layer plans by abstraction, split oversized asks, and consolidate as understanding evolves.
+- **[implementation](implementation/SKILL.md)** — orchestrates writing code: plans against clean-code and language standards, implements under process rules (task specificity, communicate before guessing, tests only where established), and triggers the review skill.
+- **[clean-code](clean-code/SKILL.md)** — language-agnostic code quality principles: minimalism, intentional structure, architectural conformity, DRY over colocation, directional dependencies, and deliberate error handling.
+- **[javascript](javascript/SKILL.md)** — JavaScript and TypeScript typing rules: no `any` and semantic distinction between `null` and `undefined`.
+- **[review](review/SKILL.md)** — two-axis report-only review via parallel sub-agents: plan/feature fidelity and coding standards conformance (`clean-code` + language skills).
+- **[bug-fix](bug-fix/SKILL.md)** — rules for diagnosing and resolving a single targeted bug without band-aids, collateral damage, or unsolicited refactors.
+- **[bug-triage](bug-triage/SKILL.md)** — triages finding lists from any source, dedupes, ranks by confidence, runs proposal agents, then implements approved fixes in isolated worktrees and resolves linked PR comments. Explicit invoke only.
+- **[bug-session](bug-session/SKILL.md)** — runs parallel Bugbot-class reviewers over a PR or diff, gathers findings, and hands the list to `bug-triage`. Explicit invoke only.
 - **[prompt-auditor](prompt-auditor/SKILL.md)** — audits a draft prompt, closes material gaps with quick questions, and returns a sectioned improved prompt runnable with a single yes. Explicit invoke only (`/prompt-auditor`).
 
-Each skill is a single `SKILL.md` file with YAML frontmatter (`name`, `description`) describing when the skill should trigger, followed by the rules themselves.
+## Cursor Project Rules (`.cursor/rules/`)
 
-The same content is also available as [Cursor Project Rules](.cursor/rules/) (`.mdc` files):
+Always-on project rules configured with `alwaysApply: true`:
 
-- **[deliberate.mdc](.cursor/rules/deliberate.mdc)** — mirrors the deliberate skill.
-- **[planning.mdc](.cursor/rules/planning.mdc)** — mirrors the planning skill.
-- **[implementation.mdc](.cursor/rules/implementation.mdc)** — mirrors the implementation skill (structure, code quality, and process in one rule).
+- **[disclose-rule-usage.mdc](.cursor/rules/disclose-rule-usage.mdc)** — requires disclosing rule usage when discretionary rules apply.
+- **[clean-code.mdc](.cursor/rules/clean-code.mdc)** — always-applied clean code standards.
+- **[javascript.mdc](.cursor/rules/javascript.mdc)** — always-applied JS/TS typing standards.
+- **[planning.mdc](.cursor/rules/planning.mdc)** — always-applied implementation planning discipline.
+- **[deliberate.mdc](.cursor/rules/deliberate.mdc)** — always-applied decision-making and pushback discipline.
+- **[bug-fix.mdc](.cursor/rules/bug-fix.mdc)** — always-applied single bug fix judgment rules.
 
 ## Adding these skills to your local agent context
 
-Run every command below from this repository's root (the directory that contains `deliberate/`, `planning/`, `implementation/`, and `prompt-auditor/`). Paths like `deliberate` are relative to that root.
-
-**Updating an existing install:** re-run the same `cp` command(s). They overwrite the destination copies with what's in this repo — no uninstall step.
+Run commands from this repository's root.
 
 ### Claude Code
 
-Claude Code discovers skills from two locations:
+Claude Code discovers skills from:
 
 - **Personal (all projects):** `~/.claude/skills/`
 - **Project-specific (this repo only):** `<project>/.claude/skills/`
 
-To install (or refresh) skills globally, copy each skill folder into your personal skills directory:
+To install or update skills globally:
 
 ```bash
 mkdir -p ~/.claude/skills
-cp -r deliberate ~/.claude/skills/deliberate
-cp -r planning ~/.claude/skills/planning
-cp -r implementation ~/.claude/skills/implementation
-cp -r prompt-auditor ~/.claude/skills/prompt-auditor
+for s in deliberate planning implementation clean-code javascript review bug-fix bug-triage bug-session prompt-auditor; do
+  cp -r "$s" ~/.claude/skills/
+done
 ```
 
-Or, to scope them to a single project instead, copy them into that project's `.claude/skills/` directory:
+Or for a specific project:
 
 ```bash
 mkdir -p /path/to/your/project/.claude/skills
-cp -r deliberate /path/to/your/project/.claude/skills/deliberate
-cp -r planning /path/to/your/project/.claude/skills/planning
-cp -r implementation /path/to/your/project/.claude/skills/implementation
-cp -r prompt-auditor /path/to/your/project/.claude/skills/prompt-auditor
+for s in deliberate planning implementation clean-code javascript review bug-fix bug-triage bug-session prompt-auditor; do
+  cp -r "$s" /path/to/your/project/.claude/skills/
+done
 ```
-
-Restart Claude Code (or start a new session) and the skills will be available. Claude invokes them automatically based on each skill's `description` trigger conditions — you can also invoke one explicitly with `/deliberate`, `/planning`, `/implementation`, or `/prompt-auditor`.
 
 ### Cursor
 
-Cursor discovers Project Rules from `.cursor/rules/` in the repository root. Each `.mdc` file here uses `description`-based activation ("Agent Requested") — Cursor's agent decides whether to pull a rule into context based on its `description` frontmatter, the same trigger conditions used by the Claude Code skills above.
-
-From this repo root, copy the rules into your project (same commands refresh an existing copy):
+Copy all rules into your project's `.cursor/rules/`:
 
 ```bash
 mkdir -p /path/to/your/project/.cursor/rules
 cp .cursor/rules/*.mdc /path/to/your/project/.cursor/rules/
 ```
 
-Or copy only the rules you want (e.g. just `planning.mdc` and `implementation.mdc`). Restart Cursor (or start a new chat) and the rules will be available; you can also check **Cursor Settings → Rules** to confirm they're indexed, or reference one explicitly with `@ruleName`.
-
-If you'd rather have a rule always applied regardless of context (no agent judgment call), open the file in Cursor's rule editor and switch its type to **Always**, or set `alwaysApply: true` in the frontmatter directly.
-
-### Other agents
-
-Any agent harness that supports Markdown-based skill/instruction files can use these directly — point the harness at the `SKILL.md` files (or paste their contents into your system prompt / project instructions file) so the rules are loaded before planning or coding begins.
+Restart Cursor or start a new chat session to load the updated rules and skills.
